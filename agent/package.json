@@ -1,0 +1,20 @@
+{
+  "name": "ops-bot",
+  "version": "0.1.0",
+  "description": "Slack AI ops bot — invoice extraction + Q&A over QuickBooks Online + Fishbowl. Reusable across clients.",
+  "main": "app.js",
+  "scripts": {
+    "start": "node app.js",
+    "digest": "node digest.js"
+  },
+  "dependencies": {
+    "@anthropic-ai/sdk": "^0.40.0",
+    "@slack/bolt": "^3.19.0",
+    "@slack/web-api": "^7.8.0",
+    "axios": "^1.7.0",
+    "dotenv": "^16.4.0",
+    "mammoth": "^1.12.0",
+    "node-cron": "^4.5.0",
+    "xlsx": "^0.18.5"
+  }
+}

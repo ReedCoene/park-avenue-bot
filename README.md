@@ -9,6 +9,36 @@ Built for **Park Avenue Wholesale, Inc.**, a workwear distributor operating two 
 
 ---
 
+## Two systems in this repository
+
+This repo holds both halves of a summer's work on the same problem, built in that order.
+
+### [`agent/`](agent/) — the AI agent (June 2026, ran in production)
+
+Claude with a tool-use loop and live two-way access to Fishbowl and QuickBooks. You talk to it
+in plain English: *"how many size-L hi-vis vests do we have?"*, or drop a photograph of a paper
+invoice and it reads every line and drafts the entry. Write operations return a deferred draft
+that only executes when a human clicks **Approve**, so the model has no path to the books on its
+own. Finance tools are filtered out of the model's tool list entirely for unauthorized users.
+
+This is what ran daily from June and processed over a hundred invoices. It went down on
+7 August 2026.
+
+See [`agent/HOW-WE-BUILT-THIS.md`](agent/HOW-WE-BUILT-THIS.md) for the process and the walls hit
+along the way, including why the first attempt was scrapped.
+
+### Root of this repo — the deterministic rebuild (August 2026)
+
+When the agent failed under a deadline, the core payment path was rebuilt as a command bot with
+no model in the loop: fixed commands, a regex router, and a two-phase commit. It gives up the
+natural-language interface and gains the property that there is nothing to go wrong at inference
+time. Everything below documents this version.
+
+The two share a design philosophy — read freely, never write without an explicit human
+confirmation — implemented two different ways.
+
+---
+
 ## What it does
 
 | Command | Effect |

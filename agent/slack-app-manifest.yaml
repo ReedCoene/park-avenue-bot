@@ -1,0 +1,44 @@
+# OpsBot — Slack app manifest (Socket Mode, no public URL needed).
+# Create the app from this at api.slack.com/apps -> "Create New App" -> "From a manifest".
+# Scopes + events below match app.js exactly. Reusable across clients — only the workspace changes.
+display_information:
+  name: Agent
+  description: Snaps invoices into QuickBooks. Knows your Fishbowl inventory. Just ask.
+  background_color: "#0C2B4A"
+features:
+  bot_user:
+    display_name: Agent
+    always_online: true
+  app_home:
+    home_tab_enabled: false
+    messages_tab_enabled: true
+    messages_tab_read_only_enabled: false
+oauth_config:
+  scopes:
+    bot:
+      - app_mentions:read   # see @OpsBot mentions in channels
+      - channels:history    # read messages in public channels it's in
+      - groups:history      # read messages in private channels it's in
+      - im:history          # read DMs sent to it
+      - im:read             # basic DM info
+      - im:write            # open/reply in DMs
+      - mpim:history         # group DMs
+      - chat:write          # post messages + approval cards
+      - files:read          # download uploaded invoice photos/PDFs
+      - channels:manage     # create the #how-to / #morning-brief / #slack-basics channels + set topics
+      - channels:read       # list channels so the bot can find/clean up + manage them
+      - pins:write          # pin the guide messages
+      - bookmarks:write     # add quick-reference bookmarks to channels
+settings:
+  event_subscriptions:
+    bot_events:
+      - app_mention
+      - message.channels
+      - message.groups
+      - message.im
+      - message.mpim
+  interactivity:
+    is_enabled: true        # required for the Approve / Needs-a-fix buttons
+  socket_mode_enabled: true # no public URL — runs from your machine / Render
+  org_deploy_enabled: false
+  token_rotation_enabled: false
