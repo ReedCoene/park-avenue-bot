@@ -1,0 +1,35 @@
+# ── SECRETS — never commit these ─────────────────────────────────────────────
+# .env holds live QuickBooks tokens, the Fishbowl admin password, and Slack tokens.
+.env
+.env.*
+!.env.example
+
+# These were found to contain live tokens / client secrets.
+QBO-SETUP-PROMPT.html
+auth-out.txt
+auth-err.txt
+lt-out.txt
+lt-err.txt
+
+# ── Dependencies (regenerate with `npm install`) ─────────────────────────────
+node_modules/
+
+# Internal working notes: real company/realm IDs, the Fishbowl hostname and admin
+# username, local file paths, and open accounting items. Useful privately, not public.
+CLAUDE.md
+
+# ── Real business data — not for a public repo ───────────────────────────────
+*.pdf
+*.csv
+InvQtys.csv
+
+# ── One-off scratch scripts from the June 2026 invoice work ──────────────────
+# These contain real customer names and invoice numbers.
+_tmp_*.js
+_process_road_ranger.js
+
+# ── OS / editor noise ────────────────────────────────────────────────────────
+desktop.ini
+Thumbs.db
+.DS_Store
+*.log
