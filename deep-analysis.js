@@ -1,4 +1,4 @@
-require('dotenv').config();
+﻿require('dotenv').config();
 const axios = require('axios');
 const fs = require('fs');
 const { parse } = require('csv-parse/sync');
@@ -31,7 +31,7 @@ function fmtN(n) { return n.toLocaleString('en-US'); }
   console.log('Connecting to Fishbowl...');
   await fbLogin();
 
-  // ── Step 1: get counts ──────────────────────────────────────────────
+  // â”€â”€ Step 1: get counts â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€
   const [soMeta, poMeta, partsMeta] = await Promise.all([
     fbGet('/sales-orders', { pageSize: 1 }),
     fbGet('/purchase-orders', { pageSize: 1 }),
@@ -43,7 +43,7 @@ function fmtN(n) { return n.toLocaleString('en-US'); }
   const totalParts = partsMeta.totalCount || 0;
   const pageSize = 500;
 
-  // ── Step 2: fetch recent SOs (last ~1500 = 3 pages from the end) ────
+  // â”€â”€ Step 2: fetch recent SOs (last ~1500 = 3 pages from the end) â”€â”€â”€â”€
   const lastPage = Math.ceil(totalSOs / pageSize);
   const pagesToFetch = [lastPage, lastPage - 1, lastPage - 2].filter(p => p >= 1);
   console.log(`Fetching recent sales orders (pages ${pagesToFetch.join(', ')} of ${lastPage})...`);
@@ -53,7 +53,7 @@ function fmtN(n) { return n.toLocaleString('en-US'); }
   );
   const recentSOs = soPages.flatMap(p => p.results || []);
 
-  // ── Step 3: fetch all POs ───────────────────────────────────────────
+  // â”€â”€ Step 3: fetch all POs â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€
   console.log('Fetching purchase orders...');
   const poLastPage = Math.ceil(totalPOs / pageSize);
   const poPages = await Promise.all(
@@ -61,22 +61,22 @@ function fmtN(n) { return n.toLocaleString('en-US'); }
   );
   const allPOs = poPages.flatMap(p => p.results || []);
 
-  // ── Step 4: inventory CSV ──────────────────────────────────────────
-  const invRaw = fs.readFileSync('C:/Users/tpand/OneDrive/Documents/InvQtys.csv', 'utf8');
+  // â”€â”€ Step 4: inventory CSV â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€
+  const invRaw = fs.readFileSync(process.env.INVENTORY_CSV_PATH || './InvQtys.csv', 'utf8');
   const invRows = parse(invRaw, { columns: true, skip_empty_lines: true });
 
   await axios.post(`${FB_BASE}/logout`, {}, { headers: { Authorization: `Bearer ${token}` } }).catch(() => {});
 
-  // ════════════════════════════════════════════════════════════════════
+  // â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•
   // ANALYSIS
-  // ════════════════════════════════════════════════════════════════════
+  // â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•
 
   const now = new Date();
   const days7  = new Date(now - 7  * 86400000);
   const days30 = new Date(now - 30 * 86400000);
   const days90 = new Date(now - 90 * 86400000);
 
-  // ── Inventory ──────────────────────────────────────────────────────
+  // â”€â”€ Inventory â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€
   const byLoc = {}, byCat = {};
   let invUnits = 0, invValue = 0, zeroCost = 0, zeroQty = 0;
 
@@ -100,7 +100,7 @@ function fmtN(n) { return n.toLocaleString('en-US'); }
 
   const topCats = Object.entries(byCat).sort((a, b) => b[1].value - a[1].value).slice(0, 10);
 
-  // ── Sales orders ───────────────────────────────────────────────────
+  // â”€â”€ Sales orders â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€
   // Probe first SO to understand available fields
   const sampleSO = recentSOs[0] || {};
 
@@ -114,7 +114,7 @@ function fmtN(n) { return n.toLocaleString('en-US'); }
     const name = so.customerName || so.customer?.name || 'Unknown';
     customerOrders[name]  = (customerOrders[name]  || 0) + 1;
 
-    // Revenue fields — try several common Fishbowl field names
+    // Revenue fields â€” try several common Fishbowl field names
     const rev = parseFloat(
       so.totalPrice ?? so.grandTotal ?? so.total ?? so.subTotal ?? so.orderTotal ?? 0
     );
@@ -147,7 +147,7 @@ function fmtN(n) { return n.toLocaleString('en-US'); }
   const months = Object.entries(monthlyData).sort((a, b) => a[0].localeCompare(b[0])).slice(-6);
   const maxOrders = Math.max(...months.map(([, v]) => v.orders), 1);
 
-  // ── Purchase orders ────────────────────────────────────────────────
+  // â”€â”€ Purchase orders â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€
   const poByStatus = {}, vendorPOs = {}, vendorSpend = {};
   let openPOValue = 0;
 
@@ -171,27 +171,27 @@ function fmtN(n) { return n.toLocaleString('en-US'); }
 
   const topVendors = Object.entries(vendorSpend).sort((a, b) => b[1] - a[1]).slice(0, 10);
 
-  // ════════════════════════════════════════════════════════════════════
+  // â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•
   // REPORT
-  // ════════════════════════════════════════════════════════════════════
+  // â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•
 
   const W = 68;
-  const line  = '═'.repeat(W);
-  const dash  = '─'.repeat(W);
+  const line  = 'â•'.repeat(W);
+  const dash  = 'â”€'.repeat(W);
 
   console.log('\n' + line);
-  console.log('  PARK AVENUE WHOLESALE — FINANCIAL & OPERATIONS SNAPSHOT');
+  console.log('  PARK AVENUE WHOLESALE â€” FINANCIAL & OPERATIONS SNAPSHOT');
   console.log(`  ${now.toLocaleDateString('en-US', { weekday: 'long', year: 'numeric', month: 'long', day: 'numeric' })}`);
   console.log(line);
 
-  // ── INVENTORY ────────────────────────────────────────────────────
+  // â”€â”€ INVENTORY â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€
   console.log('\n  INVENTORY');
   console.log(dash);
   console.log(`  Total SKUs tracked:        ${fmtN(totalParts)}`);
   console.log(`  Line items in CSV:         ${fmtN(invRows.length)}`);
   console.log(`  Total units on hand:       ${fmtN(invUnits)}`);
   console.log(`  Estimated value at cost:   ${fmt$(invValue)}`);
-  console.log(`  SKUs with $0 cost:         ${fmtN(zeroCost)}  ← needs cost assignment`);
+  console.log(`  SKUs with $0 cost:         ${fmtN(zeroCost)}  â† needs cost assignment`);
   console.log(`  SKUs with 0 qty:           ${fmtN(zeroQty)}`);
   console.log('\n  By warehouse:');
   Object.entries(byLoc).filter(([, q]) => q > 0).sort((a, b) => b[1] - a[1])
@@ -208,14 +208,14 @@ function fmtN(n) { return n.toLocaleString('en-US'); }
     });
   }
 
-  // ── SALES ORDERS ────────────────────────────────────────────────
+  // â”€â”€ SALES ORDERS â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€
   console.log('\n\n  SALES ORDERS');
   console.log(dash);
   console.log(`  All-time total:            ${fmtN(totalSOs)} orders`);
   console.log(`  Sample window:             most recent ${fmtN(recentSOs.length)} orders`);
-  console.log(`  Within sample — last 7d:   ${fmtN(so7)}`);
-  console.log(`  Within sample — last 30d:  ${fmtN(so30)}`);
-  console.log(`  Within sample — last 90d:  ${fmtN(so90)}`);
+  console.log(`  Within sample â€” last 7d:   ${fmtN(so7)}`);
+  console.log(`  Within sample â€” last 30d:  ${fmtN(so30)}`);
+  console.log(`  Within sample â€” last 90d:  ${fmtN(so90)}`);
   console.log(`  Currently open (sample):   ${fmtN(openSOs.length)}`);
 
   if (filledCount > 0) {
@@ -236,7 +236,7 @@ function fmtN(n) { return n.toLocaleString('en-US'); }
 
   console.log('\n  Monthly order trend (last 6 months in sample):');
   months.forEach(([m, { orders, revenue }]) => {
-    const bar = '█'.repeat(Math.round((orders / maxOrders) * 24));
+    const bar = 'â–ˆ'.repeat(Math.round((orders / maxOrders) * 24));
     const revStr = revenue > 0 ? `  ${fmt$(revenue)}` : '';
     console.log(`    ${m}  ${bar.padEnd(24)} ${fmtN(orders).padStart(5)}${revStr}`);
   });
@@ -256,7 +256,7 @@ function fmtN(n) { return n.toLocaleString('en-US'); }
     });
   }
 
-  // ── PURCHASE ORDERS ─────────────────────────────────────────────
+  // â”€â”€ PURCHASE ORDERS â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€
   console.log('\n\n  PURCHASE ORDERS');
   console.log(dash);
   console.log(`  All-time total:            ${fmtN(totalPOs)} POs`);
@@ -285,17 +285,17 @@ function fmtN(n) { return n.toLocaleString('en-US'); }
       });
   }
 
-  // ── HEALTH FLAGS ────────────────────────────────────────────────
+  // â”€â”€ HEALTH FLAGS â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€
   console.log('\n\n  FLAGS & OBSERVATIONS');
   console.log(dash);
   const flags = [];
 
-  if (zeroCost > 100) flags.push(`  ⚠  ${fmtN(zeroCost)} inventory line items have $0 cost — overstates real margin`);
-  if (openPOs.length > 50) flags.push(`  ⚠  ${fmtN(openPOs.length)} open POs — confirm these are all active`);
-  if (so30 < 10)  flags.push(`  ⚠  Very few orders in last 30 days visible in sample — check page alignment`);
-  if (filledCount === 0) flags.push('  ℹ  Fishbowl SO endpoint does not expose order totals — need /api/sales-order/:id or QBO for revenue');
-  if (invValue > 0) flags.push(`  ✓  ${fmt$(invValue)} inventory at cost across ${fmtN(invUnits)} units`);
-  if (totalSOs > 100000) flags.push(`  ✓  ${fmtN(totalSOs)} lifetime orders — very high volume / established business`);
+  if (zeroCost > 100) flags.push(`  âš   ${fmtN(zeroCost)} inventory line items have $0 cost â€” overstates real margin`);
+  if (openPOs.length > 50) flags.push(`  âš   ${fmtN(openPOs.length)} open POs â€” confirm these are all active`);
+  if (so30 < 10)  flags.push(`  âš   Very few orders in last 30 days visible in sample â€” check page alignment`);
+  if (filledCount === 0) flags.push('  â„¹  Fishbowl SO endpoint does not expose order totals â€” need /api/sales-order/:id or QBO for revenue');
+  if (invValue > 0) flags.push(`  âœ“  ${fmt$(invValue)} inventory at cost across ${fmtN(invUnits)} units`);
+  if (totalSOs > 100000) flags.push(`  âœ“  ${fmtN(totalSOs)} lifetime orders â€” very high volume / established business`);
 
   flags.forEach(f => console.log(f));
 

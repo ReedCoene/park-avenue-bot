@@ -1,8 +1,14 @@
-require('dotenv').config();
+const path = require('path');
+require('dotenv').config({ path: path.join(__dirname, '.env') });
 const qbo = require('./qbo');
 
-const CHECKING = { value: '41', name: 'Checking (Key Bank XX6916)' };
-const UNDEPOSITED_FUNDS_ID = '46';
+// Chart-of-accounts IDs are specific to one QuickBooks company, so they live in .env
+// rather than in source. Find yours with: SELECT * FROM Account
+const CHECKING = {
+  value: process.env.QBO_CHECKING_ACCOUNT_ID || '',
+  name: process.env.QBO_CHECKING_ACCOUNT_NAME || 'Checking',
+};
+const UNDEPOSITED_FUNDS_ID = process.env.QBO_UNDEPOSITED_FUNDS_ID || '';
 
 async function getUndepositedPayments() {
   const r = await qbo.query("SELECT * FROM Payment ORDERBY TxnDate DESC MAXRESULTS 200");

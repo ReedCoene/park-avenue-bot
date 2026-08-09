@@ -1,7 +1,7 @@
-const fs = require('fs');
+﻿const fs = require('fs');
 const { parse } = require('csv-parse/sync');
 
-const raw = fs.readFileSync('C:/Users/tpand/OneDrive/Documents/InvQtys.csv', 'utf8');
+const raw = fs.readFileSync(process.env.INVENTORY_CSV_PATH || './InvQtys.csv', 'utf8');
 const rows = parse(raw, { columns: true, skip_empty_lines: true });
 
 console.log('Total inventory rows:', rows.length);

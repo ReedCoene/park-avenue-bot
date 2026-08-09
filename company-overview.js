@@ -1,4 +1,4 @@
-require('dotenv').config();
+﻿require('dotenv').config();
 const axios = require('axios');
 const fs = require('fs');
 const { parse } = require('csv-parse/sync');
@@ -39,7 +39,7 @@ async function fbGet(path, params = {}) {
   const poList = poRes.results || [];
 
   // Inventory from CSV
-  const invRaw = fs.readFileSync('C:/Users/tpand/OneDrive/Documents/InvQtys.csv', 'utf8');
+  const invRaw = fs.readFileSync(process.env.INVENTORY_CSV_PATH || './InvQtys.csv', 'utf8');
   const invRows = parse(invRaw, { columns: true, skip_empty_lines: true });
 
   // --- Inventory analysis ---
@@ -84,7 +84,7 @@ async function fbGet(path, params = {}) {
 
   // --- Print report ---
   console.log('='.repeat(65));
-  console.log('  PARK AVENUE WHOLESALE — COMPANY OVERVIEW');
+  console.log('  PARK AVENUE WHOLESALE â€” COMPANY OVERVIEW');
   console.log(' ', new Date().toLocaleDateString('en-US', { weekday:'long', year:'numeric', month:'long', day:'numeric' }));
   console.log('='.repeat(65));
 
@@ -107,7 +107,7 @@ async function fbGet(path, params = {}) {
     .forEach(([s,c]) => console.log(`    ${s.padEnd(20)} ${c}`));
   console.log('\n  Monthly order trend:');
   months.forEach(([m,c]) => {
-    const bar = '█'.repeat(Math.round(c / Math.max(...months.map(x=>x[1])) * 20));
+    const bar = 'â–ˆ'.repeat(Math.round(c / Math.max(...months.map(x=>x[1])) * 20));
     console.log(`    ${m}  ${bar.padEnd(20)} ${c}`);
   });
 

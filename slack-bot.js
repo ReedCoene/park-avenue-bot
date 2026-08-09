@@ -17,7 +17,8 @@ require('dotenv').config({ path: path.join(__dirname, '.env') });
 const { App } = require('@slack/bolt');
 const qbo = require('./qbo');
 
-const UNDEPOSITED_FUNDS_ID = '46';
+// Chart-of-accounts ID, specific to one QuickBooks company — kept in .env, not in source.
+const UNDEPOSITED_FUNDS_ID = process.env.QBO_UNDEPOSITED_FUNDS_ID || '';
 
 const ALLOWED = (process.env.SLACK_ALLOWED_USERS || '')
   .split(',').map(s => s.trim()).filter(Boolean);
@@ -83,7 +84,7 @@ const HELP = [
   '`status` — check the QuickBooks and Fishbowl connections',
   '`invoice 255289` — look up one invoice by its number',
   '`open` — list unpaid invoices (oldest due first)',
-  '`open Road Ranger` — unpaid invoices for one customer',
+  '`open <customer>` — unpaid invoices for one customer',
   '`pay 255289` — record full payment on an invoice',
   '`pay 255289 1924.80` — record a partial payment',
   '`demo pay 255289` — walk the whole process without changing anything',

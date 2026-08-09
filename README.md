@@ -16,7 +16,7 @@ Built for **Park Avenue Wholesale, Inc.**, a workwear distributor operating two 
 | `status` | Reports whether QuickBooks and Fishbowl are reachable, and which company is connected |
 | `invoice 255289` | Looks up one invoice: customer, dates, total, amount paid, balance |
 | `open` | Lists unpaid invoices, oldest due first, with a total outstanding |
-| `open Road Ranger` | Same, filtered to one customer |
+| `open <customer>` | Same, filtered to one customer |
 | `pay 255289` | Records a payment for the full remaining balance |
 | `pay 255289 1924.80` | Records a partial payment |
 | `demo pay 255289` | Runs the entire flow but skips the write |
@@ -154,6 +154,10 @@ Two setup traps worth knowing, since both present identically as "the bot never 
 tokens — and is excluded via `.gitignore`, along with generated reports and scratch scripts
 containing real customer data. Anyone cloning this repo supplies their own credentials via
 `.env.example`.
+
+Chart-of-accounts IDs and local file paths are also read from `.env` rather than hardcoded, so
+the published source carries no business-identifying values. `PUBLICATION-NOTES.md` documents
+exactly what was withheld from this repository and why.
 
 ## Status
 
