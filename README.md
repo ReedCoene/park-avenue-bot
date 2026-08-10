@@ -191,7 +191,17 @@ exactly what was withheld from this repository and why.
 
 ## Status
 
-The Slack bot and QuickBooks integration are working. The Fishbowl integration is code-complete
-but blocked: Fishbowl requires an administrator to approve an integrated application from
-inside its desktop client, and that approval is outstanding, so Fishbowl API calls return 401.
-`status` reports this accurately rather than failing silently.
+The Slack bot and QuickBooks integration are working.
+
+The Fishbowl integration is code-complete but not yet approved. Fishbowl grants API access
+**per registered application**, and an administrator has to approve each one from inside the
+Fishbowl desktop client before its calls succeed. The two bots in this repo register under
+different names, so approval does not carry across:
+
+| Application name | Used by | Status |
+|---|---|---|
+| `OpsBot` | [`agent/`](agent/) | Approved and in use for inventory queries |
+| `Claude Reports` | this bot | Awaiting admin approval, so calls return 401 |
+
+Until that approval happens, `node status.js` reports the 401 and names the exact fix rather
+than failing silently. QuickBooks is unaffected, and every command in the table above works.
