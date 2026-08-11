@@ -21,21 +21,18 @@ invoice and it reads every line and drafts the entry. Write operations return a 
 that only executes when a human clicks **Approve**, so the model has no path to the books on its
 own. Finance tools are filtered out of the model's tool list entirely for unauthorized users.
 
-This is what ran daily from June and processed over a hundred invoices. It went down on
-7 August 2026.
+This is what ran daily from June 2026 onward, and over a hundred invoices have gone through it.
 
 See [`agent/HOW-WE-BUILT-THIS.md`](agent/HOW-WE-BUILT-THIS.md) for the process and the walls hit
 along the way, including why the first attempt was scrapped.
 
 ### Root of this repo — the deterministic rebuild (August 2026)
 
-When the agent failed under a deadline, the core payment path was rebuilt as a command bot with
-no model in the loop: fixed commands, a regex router, and a two-phase commit. It gives up the
+The core payment path was also built as a command bot with no model in the loop: fixed commands, a regex router, and a two-phase commit. It gives up the
 natural-language interface and gains the property that there is nothing to go wrong at inference
 time. Everything below documents this version.
 
-The two share a design philosophy — read freely, never write without an explicit human
-confirmation — implemented two different ways.
+The two share a design philosophy, read freely and never write without an explicit human confirmation, implemented two different ways.
 
 ---
 

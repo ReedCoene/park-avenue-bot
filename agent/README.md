@@ -6,11 +6,7 @@ Someone photographs a paper invoice and drops it in Slack. The agent reads every
 
 It also just answers questions: *"how many size-L hi-vis vests do we have?"*, *"what's running low?"*, *"who's overdue?"*
 
-Built with Claude (tool use) for **Park Avenue Wholesale**, a Buffalo apparel wholesaler running Fishbowl and QuickBooks Online. **In daily production use.**
-
-<!-- Add these two images to docs/ and they'll render here -->
-![Invoice card with Approve button](docs/invoice-card.png)
-![Live inventory query](docs/inventory-query.png)
+Built with Claude (tool use) for **Park Avenue Wholesale**, a Buffalo apparel wholesaler running Fishbowl and QuickBooks Online. **Ran in daily production from June 2026.**
 
 ---
 
